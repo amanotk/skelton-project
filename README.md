@@ -40,7 +40,7 @@ uv run pytest
 3. Open a notebook:
 
 ```bash
-uv run marimo run notebooks/polynomial_fit_demo.py
+uv run marimo run notebooks/demo.py
 ```
 
 ## Marimo notebook workflow
@@ -59,7 +59,7 @@ Example:
 
 ```toml
 wasm = [
-  "notebooks/polynomial_fit_demo.py",
+  "notebooks/demo.py",
 ]
 ```
 

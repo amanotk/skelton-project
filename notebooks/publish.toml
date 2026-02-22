@@ -2,5 +2,5 @@
 # Any notebook not listed here is published as static HTML by default.
 
 wasm = [
-  "notebooks/polynomial_fit_demo.py",
+  "notebooks/demo.py",
 ]
