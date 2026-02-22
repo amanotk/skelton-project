@@ -38,6 +38,22 @@ Test commands:
 - Run one test file: `uv run pytest tests/test_arithmetic.py`
 - Run one test by name: `uv run pytest -k test_div`
 
+## C++ Guidelines and Tooling
+
+- Prefer modern C++ style (C++17 or newer).
+- Prefer RAII and standard library ownership types (`std::unique_ptr`, `std::shared_ptr`) over raw `new`/`delete`.
+- Prefer `std::vector`, `std::array`, and standard algorithms over manual memory management.
+- Use `const` correctness, references where appropriate, and explicit numeric types for reproducibility.
+- Keep numerics and model logic in reusable library code; keep executables as thin orchestration layers.
+- Use repository `.clang-format` and `.clangd` settings for consistent formatting and editor tooling.
+
+CMake/CTest workflow:
+
+- Configure: `cmake -S . -B build -DCMAKE_BUILD_TYPE=Release`
+- Build: `cmake --build build -j`
+- Run tests: `ctest --test-dir build --output-on-failure`
+- Run one test: `ctest --test-dir build -R <test_name> --output-on-failure`
+
 ## Notebook Policy (Marimo)
 
 - Prefer marimo for all new interactive research workflows.
