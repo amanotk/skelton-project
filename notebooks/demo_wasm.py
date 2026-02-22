@@ -10,9 +10,7 @@ def _():
     import matplotlib.pyplot as plt
     import numpy as np
 
-    import sample
-
-    return mo, np, plt, sample
+    return mo, np, plt
 
 
 @app.cell
@@ -22,27 +20,16 @@ def _(mo):
     mo.md(
         dedent(
             """
-            # Marimo Notebook Demo
+            # Marimo Notebook Demo (WASM)
 
-            This demo generates synthetic polynomial data, fits a polynomial with
-            `numpy.polyfit`, and runs quick checks for arithmetic helpers in
-            `sample`.
+            This notebook is designed for browser execution (`html-wasm`).
+
+            Local project modules like `src/sample/` are not importable by default
+            in WASM builds. If you need them, package and install them in-browser
+            (for example with `micropip` and a hosted wheel).
             """
         )
     )
-    return
-
-
-@app.cell
-def _(mo):
-    is_script_mode = mo.app_meta().mode == "script"
-    return (is_script_mode,)
-
-
-@app.cell
-def _(is_script_mode, mo):
-    mode_label = "script" if is_script_mode else "interactive"
-    mo.md(f"Current mode: `{mode_label}`")
     return
 
 
@@ -92,44 +79,6 @@ def _(plt, x, y_fit, y_obs, y_true):
     ax.legend()
     ax.grid(alpha=0.25)
     fig
-    return
-
-
-@app.cell
-def _(sample):
-    arithmetic_results = {
-        "add(2, 3)": sample.add(2, 3),
-        "sub(7, 4)": sample.sub(7, 4),
-        "mul(6, 5)": sample.mul(6, 5),
-        "div(8, 2)": sample.div(8, 2),
-    }
-
-    assert arithmetic_results["add(2, 3)"] == 5
-    assert arithmetic_results["sub(7, 4)"] == 3
-    assert arithmetic_results["mul(6, 5)"] == 30
-    assert arithmetic_results["div(8, 2)"] == 4
-
-    div_zero_ok = False
-    try:
-        sample.div(1, 0)
-    except ValueError:
-        div_zero_ok = True
-    assert div_zero_ok
-
-    return (arithmetic_results,)
-
-
-@app.cell
-def _(arithmetic_results, mo):
-    rows = "\n".join(f"- `{expr}` -> `{value}`" for expr, value in arithmetic_results.items())
-    mo.md(
-        "## sample module checks\n\n"
-        "The `sample` module is the reusable package under `src/sample/`. "
-        "In this notebook we call its basic arithmetic helpers and verify the "
-        "expected behavior, including divide-by-zero handling.\n\n"
-        f"{rows}\n\n"
-        "- `div(1, 0)` raises `ValueError` as expected"
-    )
     return
 
 

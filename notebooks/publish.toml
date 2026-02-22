@@ -2,5 +2,5 @@
 # Any notebook not listed here is published as static HTML by default.
 
 wasm = [
-  "notebooks/demo.py",
+  "notebooks/demo_wasm.py",
 ]

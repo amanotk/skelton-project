@@ -40,7 +40,13 @@ uv run pytest
 3. Open a notebook:
 
 ```bash
-uv run marimo run notebooks/demo.py
+uv run marimo run notebooks/demo_static.py
+```
+
+WASM-focused example notebook:
+
+```bash
+uv run marimo run notebooks/demo_wasm.py
 ```
 
 ## Marimo notebook workflow
@@ -59,9 +65,11 @@ Example:
 
 ```toml
 wasm = [
-  "notebooks/demo.py",
+  "notebooks/demo_wasm.py",
 ]
 ```
+
+`demo_static.py` imports the local `sample` module; `demo_wasm.py` avoids local imports so it works in browser WASM mode.
 
 ## Recommended Git branching strategy
 
