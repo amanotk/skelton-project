@@ -9,6 +9,12 @@ This repository is a starter template for a scientific research project.
 - Track tests and documentation as the project grows
 - Publish notebook results to GitHub Pages (`/main/` and `/develop/`)
 
+## Published pages
+
+- Landing page: <https://amanotk.github.io/skelton-project/>
+- Stable notebooks (`main`): <https://amanotk.github.io/skelton-project/main/>
+- Development notebooks (`develop`): <https://amanotk.github.io/skelton-project/develop/>
+
 ## Directory structure
 
 - `src/`: reusable Python code
@@ -43,6 +49,19 @@ uv run marimo run notebooks/polynomial_fit_demo.py
 - Edit notebook: `uv run marimo edit notebooks/<notebook-name>.py`
 - Script-mode check: `uv run notebooks/<notebook-name>.py`
 - Notebook lint check: `uvx marimo check notebooks/<notebook-name>.py`
+
+## GitHub Pages export mode
+
+- Default behavior: notebooks are published as static HTML.
+- To publish a notebook as interactive WASM, list it in `notebooks/publish.toml`.
+
+Example:
+
+```toml
+wasm = [
+  "notebooks/polynomial_fit_demo.py",
+]
+```
 
 ## Recommended Git branching strategy
 

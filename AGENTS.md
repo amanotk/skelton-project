@@ -72,6 +72,8 @@ GitHub Pages publishing policy:
   - `/main/` from `main`
   - `/develop/` from `develop`
 - Do not auto-publish `feature/*` branches.
+- Notebook export mode defaults to static HTML.
+- List notebooks in `notebooks/publish.toml` under `wasm` to publish those as interactive WASM pages.
 
 ## Data and Artifact Handling
 
