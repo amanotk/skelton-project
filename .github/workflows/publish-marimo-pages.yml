@@ -1,0 +1,112 @@
+name: Publish Marimo Pages
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pages-${{ github.ref_name }}
+  cancel-in-progress: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+
+      - name: Sync dependencies
+        run: uv sync
+
+      - name: Export marimo notebooks as HTML
+        run: |
+          branch="${GITHUB_REF_NAME}"
+          out_dir="site/${branch}"
+          mkdir -p "${out_dir}"
+
+          shopt -s nullglob
+          notebooks=(notebooks/*.py)
+          for notebook in "${notebooks[@]}"; do
+            name="$(basename "${notebook}" .py)"
+            uv run marimo export html "${notebook}" -o "${out_dir}/${name}.html"
+          done
+
+      - name: Build branch and top-level index pages
+        run: |
+          uv run python - <<'PY'
+          import os
+          from pathlib import Path
+
+          branch = Path("site") / os.environ["GITHUB_REF_NAME"]
+          branch.mkdir(parents=True, exist_ok=True)
+
+          notebook_pages = sorted(
+              p.name for p in branch.glob("*.html") if p.name != "index.html"
+          )
+
+          links = "\n".join(
+              f'<li><a href="./{name}">{name.removesuffix(".html")}</a></li>'
+              for name in notebook_pages
+          )
+          if not links:
+              links = "<li>No notebooks exported yet.</li>"
+
+          branch_index = f"""<!doctype html>
+          <html lang=\"en\">
+            <head>
+              <meta charset=\"utf-8\" />
+              <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />
+              <title>skelton notebooks ({branch.name})</title>
+            </head>
+            <body>
+              <h1>skelton notebooks: {branch.name}</h1>
+              <p><a href=\"../index.html\">Back to branch index</a></p>
+              <ul>
+                {links}
+              </ul>
+            </body>
+          </html>
+          """
+          (branch / "index.html").write_text(branch_index, encoding="utf-8")
+
+          top_index = """<!doctype html>
+          <html lang=\"en\">
+            <head>
+              <meta charset=\"utf-8\" />
+              <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />
+              <title>skelton notebook pages</title>
+            </head>
+            <body>
+              <h1>skelton notebook pages</h1>
+              <ul>
+                <li><a href=\"./main/index.html\">main</a></li>
+                <li><a href=\"./develop/index.html\">develop</a></li>
+              </ul>
+            </body>
+          </html>
+          """
+          Path("site/index.html").write_text(top_index, encoding="utf-8")
+          Path("site/.nojekyll").write_text("", encoding="utf-8")
+          PY
+
+      - name: Deploy to gh-pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./site
+          keep_files: true
