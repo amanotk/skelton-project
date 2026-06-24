@@ -31,7 +31,7 @@ line-length = 100
 select = ["E", "F", "I", "B", "UP"]
 
 [tool.ruff.lint.per-file-ignores]
-"notebooks/*.py" = ["B018"]
+"notebooks/*.py" = ["B018", "F821"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
