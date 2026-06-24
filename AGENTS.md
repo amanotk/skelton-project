@@ -20,7 +20,7 @@ Use this file as guidance when contributing code, analysis workflows, and automa
 
 ## Python and Tooling
 
-- Target Python version: 3.11.
+- Target Python version: 3.12.
 - Use `uv` for dependency management and command execution.
 - Use `ruff` for linting and formatting.
 - Use `pytest` for tests.
